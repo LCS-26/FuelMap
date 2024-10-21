@@ -25,6 +25,7 @@ public class CustomerDAO {
         }
 
 	}
+
 	public Customer getCliente(int id) {
 		Connection con=ConnectionDAO.getInstance().getConnection();
 		Customer cu=null;
@@ -46,6 +47,26 @@ public class CustomerDAO {
 		}
 		return cu;
 		//return new Customer("1","Atilano");
+	}
+
+	public void setCliente(Customer cu) {
+		Connection con=ConnectionDAO.getInstance().getConnection();
+		String consulta = "INSERT INTO usuarios (id, nombre, email, password, secret) VALUES (?, ?, ?, ?, ?)";
+
+		try (PreparedStatement pst = con.prepareStatement(consulta)) {
+			// Asignar el valor de los parámetros
+			pst.setString(1, cu.getId());
+			pst.setString(2, cu.getName());
+			pst.setString(3, cu.getEmail());
+			pst.setString(4, cu.getPassword());
+			pst.setString(5, cu.getSecret());
+
+			// Ejecutar la consulta
+			pst.executeUpdate();
+
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
+		}
 	}
 	
 	public static void main(String[] args) {
