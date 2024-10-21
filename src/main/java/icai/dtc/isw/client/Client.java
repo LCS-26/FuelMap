@@ -63,6 +63,13 @@ public class Client {
 					System.out.println("No se ha recuperado nada de la base de datos");
 				}
 				break;
+
+			case "/setCustomerResponse":
+				session=mensajeVuelta.getSession();
+				String result=(String) session.get("result");
+				System.out.println("Resultado de la inserción: "+result);
+				break;
+
 			default:
 
 				System.out.println("\nError a la vuelta");
@@ -107,7 +114,7 @@ public class Client {
 				System.exit(1);
 			} catch (IOException e) {
 				System.err.println("Unable to get streams from server");
-				System.exit(1);
+				/*System.exit(1);*/
 			}		
 
 			/** Closing all the resources */

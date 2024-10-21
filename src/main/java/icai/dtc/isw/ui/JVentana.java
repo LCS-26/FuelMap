@@ -6,6 +6,7 @@ import icai.dtc.isw.domain.Customer;
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
+import java.util.Random;
 
 public class JVentana extends JFrame {
 
@@ -96,5 +97,28 @@ public class JVentana extends JFrame {
             nombre=cu.getName();
         }
         return nombre;
+    }
+
+    public void registerCustomer(String email, String password, String name, String id) {
+        Customer cu=new Customer(id,name,email,password);
+        Client cliente=new Client();
+        HashMap<String,Object> session=new HashMap<>();
+        String context="/setCustomer";
+        session.put("Customer",cu);
+        session=cliente.sentMessage(context,session);
+        String result=(String)session.get("result");
+        System.out.println("Resultado de la inserción: "+result);
+    }
+
+    public String loginCustomer(String email, String password) {
+        Client cliente=new Client();
+        HashMap<String,Object> session=new HashMap<>();
+        String context="/loginCustomer";
+        session.put("email",email);
+        session.put("password",password);
+        session=cliente.sentMessage(context,session);
+        String result=(String)session.get("result");
+        System.out.println("Resultado del login: "+result);
+        return result;
     }
 }
