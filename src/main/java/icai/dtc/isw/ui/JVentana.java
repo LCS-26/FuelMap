@@ -8,31 +8,53 @@ import java.awt.*;
 import java.util.HashMap;
 
 public class JVentana extends JFrame {
+
     public static void main(String[] args) {
         new JVentana();
     }
+
     private int id;
     public JVentana() {
-        super("INGENIERÍA DEL SOFTWARE");
+        super("FUEL MAP");
         this.setLayout(new BorderLayout());
         //Pongo un panel arriba con el título
         JPanel pnlNorte = new JPanel();
-        JLabel lblTitulo = new JLabel("Prueba COMUNICACIÓN", SwingConstants.CENTER);
+
+        JPanel pnlNorteNorte = new JPanel();
+        JLabel lblTitulo = new JLabel("Registarse", SwingConstants.CENTER);
+        pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
+
+        JPanel pnlNorteSur = new JPanel();
+        JButton btnRegis = new JButton("Registarse", SwingConstants.CENTER);
+        pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
+
         lblTitulo.setFont(new Font("Courier", Font.BOLD, 20));
         pnlNorte.add(lblTitulo);
+        pnlNorte.setLayout(new GridLayout(4, 2));
+        pnlNorte.add
+
         this.add(pnlNorte, BorderLayout.NORTH);
 
         //Pongo el panel central el botón
         JPanel pnlCentro = new JPanel();
-
         JLabel lblId = new JLabel("Introduzca el id", SwingConstants.CENTER);
-        JButton btnInformacion = new JButton("Recibir información");
         JTextField txtId = new JTextField();
         txtId.setBounds(new Rectangle(250,150,250,150));
         txtId.setHorizontalAlignment(JTextField.LEFT);
+
+        JLabel lblPass = new JLabel("Introduzca la constraseña", SwingConstants.CENTER);
+        JTextField txtPass = new JTextField();
+        txtPass.setBounds(new Rectangle(250,150,250,150));
+        txtPass.setHorizontalAlignment(JTextField.LEFT);
+
+        JButton btnLogIn = new JButton("Log in");
+
+
         pnlCentro.add(lblId);
         pnlCentro.add(txtId);
-        pnlCentro.add(btnInformacion);
+        pnlCentro.add(lblPass);
+        pnlCentro.add(txtPass);
+        pnlCentro.add(btnLogIn);
         pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.	X_AXIS));
         this.add(pnlCentro, BorderLayout.CENTER);
 
@@ -46,7 +68,7 @@ public class JVentana extends JFrame {
         pnlSur.add(lblResultado);
         pnlSur.add(txtResultado);
         //Añado el listener al botón
-        btnInformacion.addActionListener(actionEvent -> {
+        btnLogIn.addActionListener(actionEvent -> {
             id=Integer.parseInt(txtId.getText());
             txtResultado.setText(recuperarInformacion());
         });
