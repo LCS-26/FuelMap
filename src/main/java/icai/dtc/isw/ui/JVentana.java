@@ -25,9 +25,12 @@ public class JVentana extends JFrame {
         JLabel lblTitulo = new JLabel("Registarse", SwingConstants.CENTER);
         pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
 
+        JPanel pnlNorteCentro = new JPanel();
+
+
         JPanel pnlNorteSur = new JPanel();
-        JButton btnRegis = new JButton("Registarse", SwingConstants.CENTER);
-        pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
+        JButton btnRegis = new JButton("Crear cuenta");
+        pnlNorte.add(pnlNorteSur, BorderLayout.SOUTH);
 
         lblTitulo.setFont(new Font("Courier", Font.BOLD, 20));
         pnlNorte.add(lblTitulo);
