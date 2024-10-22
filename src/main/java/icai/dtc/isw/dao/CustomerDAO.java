@@ -16,7 +16,7 @@ public class CustomerDAO {
                 ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
-            	lista.add(new Customer(rs.getString(1),rs.getString(2)));
+            	lista.add(new Customer(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)));
             }
 
         } catch (SQLException ex) {
@@ -52,6 +52,7 @@ public class CustomerDAO {
 	public void setCliente(Customer cu) {
 		Connection con=ConnectionDAO.getInstance().getConnection();
 		String consulta = "INSERT INTO usuarios (id, nombre, email, password, secret) VALUES (?, ?, ?, ?, ?)";
+		System.out.println("Voy a insertar el id: "+cu.getId()+" con nombre: "+cu.getName());
 
 		try (PreparedStatement pst = con.prepareStatement(consulta)) {
 			// Asignar el valor de los parámetros

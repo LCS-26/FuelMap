@@ -68,7 +68,35 @@ public class SocketServer extends Thread {
 					mensajeOut.setSession(session);
 					objectOutputStream.writeObject(mensajeOut);
 					break;
-		    	
+
+				case "/loginCustomer":
+					String email=(String) session.get("email");
+					String password=(String) session.get("password");
+					customerControler=new CustomerControler();
+					String secret=customerControler.checkEmailPassword(email,password);
+					if (secret!=null){
+						System.out.println("Secret:"+secret);
+						session.put("secret",secret);
+						session.put("result","OK");
+					}else {
+						System.out.println("No encontrado en la base de datos");
+						session.put("result","KO");
+					}
+					mensajeOut.setContext("/loginCustomerResponse");
+					mensajeOut.setSession(session);
+					objectOutputStream.writeObject(mensajeOut);
+					break;
+
+				case "/setCustomer":
+					Customer cu1=(Customer) session.get("Customer");
+					customerControler=new CustomerControler();
+					customerControler.setCustomer(cu1);
+					mensajeOut.setContext("/setCustomerResponse");
+					session.put("result","OK");
+					mensajeOut.setSession(session);
+					objectOutputStream.writeObject(mensajeOut);
+					break;
+
 		    	default:
 		    		System.out.println("\nParámetro no encontrado");
 		    		break;
