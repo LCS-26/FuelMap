@@ -18,63 +18,84 @@ public class JVentana extends JFrame {
     public JVentana() {
         super("FUEL MAP");
         this.setLayout(new BorderLayout());
+
         //Pongo un panel arriba con el título
         JPanel pnlNorte = new JPanel();
-
-        JPanel pnlNorteNorte = new JPanel();
         JLabel lblTitulo = new JLabel("Registarse", SwingConstants.CENTER);
-        pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
-
-        JPanel pnlNorteSur = new JPanel();
-        JButton btnRegis = new JButton("Registarse", SwingConstants.CENTER);
-        pnlNorte.add(pnlNorteNorte, BorderLayout.NORTH);
-
-        lblTitulo.setFont(new Font("Courier", Font.BOLD, 20));
         pnlNorte.add(lblTitulo);
-        pnlNorte.setLayout(new GridLayout(4, 2));
-        pnlNorte.add
-
         this.add(pnlNorte, BorderLayout.NORTH);
 
-        //Pongo el panel central el botón
+        //Pongo un panel en el centro con los campos
         JPanel pnlCentro = new JPanel();
-        JLabel lblId = new JLabel("Introduzca el id", SwingConstants.CENTER);
+        pnlCentro.setLayout(new GridLayout(1,6));
+        JLabel lblRegister = new JLabel("Register");
+        JLabel lblLogin = new JLabel("Login");
+        JButton btnRegister = new JButton("Register");
+        JButton btnLogin = new JButton("Login");
+
+        JPanel pnlRegister = new JPanel();
+        pnlRegister.setLayout(new GridLayout(4,2));
+
+        JLabel lblName = new JLabel("Name");
+        JTextField txtName = new JTextField();
+        JLabel lblId = new JLabel("Id");
         JTextField txtId = new JTextField();
-        txtId.setBounds(new Rectangle(250,150,250,150));
-        txtId.setHorizontalAlignment(JTextField.LEFT);
+        JLabel lblEmail = new JLabel("Email");
+        JTextField txtEmail = new JTextField();
+        JLabel lblPassword = new JLabel("Password");
+        JTextField txtPassword = new JTextField();
 
-        JLabel lblPass = new JLabel("Introduzca la constraseña", SwingConstants.CENTER);
-        JTextField txtPass = new JTextField();
-        txtPass.setBounds(new Rectangle(250,150,250,150));
-        txtPass.setHorizontalAlignment(JTextField.LEFT);
+        pnlRegister.add(lblName);
+        pnlRegister.add(txtName);
+        pnlRegister.add(lblId);
+        pnlRegister.add(txtId);
+        pnlRegister.add(lblEmail);
+        pnlRegister.add(txtEmail);
+        pnlRegister.add(lblPassword);
+        pnlRegister.add(txtPassword);
 
-        JButton btnLogIn = new JButton("Log in");
+        JPanel pnlLogin = new JPanel();
+        pnlLogin.setLayout(new GridLayout(2,2));
 
+        JLabel lblEmailLogin = new JLabel("Email");
+        JTextField txtEmailLogin = new JTextField();
+        JLabel lblPasswordLogin = new JLabel("Password");
+        JTextField txtPasswordLogin = new JTextField();
 
-        pnlCentro.add(lblId);
-        pnlCentro.add(txtId);
-        pnlCentro.add(lblPass);
-        pnlCentro.add(txtPass);
-        pnlCentro.add(btnLogIn);
-        pnlCentro.setLayout(new BoxLayout(pnlCentro, BoxLayout.	X_AXIS));
-        this.add(pnlCentro, BorderLayout.CENTER);
+        pnlLogin.add(lblEmailLogin);
+        pnlLogin.add(txtEmailLogin);
+        pnlLogin.add(lblPasswordLogin);
+        pnlLogin.add(txtPasswordLogin);
 
-        //El Sur lo hago para recoger el resultado
-        JPanel pnlSur = new JPanel();
-        JLabel lblResultado = new JLabel("El resultado obtenido es: ", SwingConstants.CENTER);
-        JTextField txtResultado = new JTextField();
-        txtResultado.setBounds(new Rectangle(250,150,250,150));
-        txtResultado.setEditable(false);
-        txtResultado.setHorizontalAlignment(JTextField.LEFT);
-        pnlSur.add(lblResultado);
-        pnlSur.add(txtResultado);
-        //Añado el listener al botón
-        btnLogIn.addActionListener(actionEvent -> {
-            id=Integer.parseInt(txtId.getText());
-            txtResultado.setText(recuperarInformacion());
+        pnlCentro.add(lblRegister);
+        pnlCentro.add(pnlRegister);
+        pnlCentro.add(btnRegister);
+        pnlCentro.add(lblLogin);
+        pnlCentro.add(pnlLogin);
+        pnlCentro.add(btnLogin);
+
+        btnRegister.addActionListener(e -> {
+            String email=txtEmail.getText();
+            String password=txtPassword.getText();
+            String name=txtName.getText();
+            String id=txtId.getText();
+            registerCustomer(email,password,name,id);
         });
-        pnlSur.setLayout(new BoxLayout(pnlSur, BoxLayout.X_AXIS));
-        this.add(pnlSur,BorderLayout.SOUTH);
+
+        btnLogin.addActionListener(e -> {
+            String email=txtEmailLogin.getText();
+            String password=txtPasswordLogin.getText();
+            String result=loginCustomer(email,password);
+            if (result.equals("OK")) {
+                id=Integer.parseInt(txtId.getText());
+                String nombre=recuperarInformacion();
+                JOptionPane.showMessageDialog(this,"Bienvenido "+nombre);
+            }else {
+                JOptionPane.showMessageDialog(this,"Error en el login");
+            }
+        });
+
+        this.add(pnlCentro, BorderLayout.CENTER);
 
         this.setSize(550,120);
         this.setResizable(false);
