@@ -14,7 +14,7 @@ public class JVentana extends JFrame {
         new JVentana();
     }
 
-    private int id;
+    private String id;
     public JVentana() {
         super("FUEL MAP");
         this.setLayout(new BorderLayout());
@@ -87,9 +87,7 @@ public class JVentana extends JFrame {
             String password=txtPasswordLogin.getText();
             String result=loginCustomer(email,password);
             if (result.equals("OK")) {
-                id=Integer.parseInt(txtId.getText());
-                String nombre=recuperarInformacion();
-                JOptionPane.showMessageDialog(this,"Bienvenido "+nombre);
+                JOptionPane.showMessageDialog(this,"Bienvenido");
             }else {
                 JOptionPane.showMessageDialog(this,"Error en el login");
             }

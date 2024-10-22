@@ -32,6 +32,14 @@ public class Customer implements Serializable{
 		this.setSecret(new Random().nextInt(1000000)+"");
 	}
 
+	public Customer(String id, String name, String email, String password, String secret) {
+		this.setId(id);
+		this.setName(name);
+		this.setEmail(email);
+		this.setPassword(password);
+		this.setSecret(secret);
+	}
+
 	public String getId() {
 		return id;
 	}
