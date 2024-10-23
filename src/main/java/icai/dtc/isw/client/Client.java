@@ -70,6 +70,12 @@ public class Client {
 				System.out.println("Resultado de la inserción: "+result);
 				break;
 
+			case "/loginCustomerResponse":
+				session=mensajeVuelta.getSession();
+				String resultLogin=(String) session.get("result");
+				System.out.println("Resultado del login: "+resultLogin);
+				break;
+
 			default:
 
 				System.out.println("\nError a la vuelta");
