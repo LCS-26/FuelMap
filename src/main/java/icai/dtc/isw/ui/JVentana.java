@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 public class JVentana extends JFrame {
-
+//hola
     public static void main(String[] args) {
         new JVentana();
     }
