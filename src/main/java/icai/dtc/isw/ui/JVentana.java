@@ -63,7 +63,7 @@ public class JVentana extends JFrame {
         button.setPreferredSize(new Dimension(150, 50));
         button.setFont(new Font("Arial", Font.PLAIN, 18));
         button.setBackground(new Color(0x5F9EA0)); // Color aguamarina
-        button.setForeground(Color.WHITE);
+        button.setForeground(new Color(0x5F9EA0));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createLineBorder(new Color(0x2E8B57), 2, true));
     }
