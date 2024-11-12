@@ -12,7 +12,9 @@ import java.util.HashMap;
 
 import icai.dtc.isw.configuration.PropertiesISW;
 import icai.dtc.isw.controler.CustomerControler;
+import icai.dtc.isw.controler.GasolineraController;
 import icai.dtc.isw.domain.Customer;
+import icai.dtc.isw.domain.Gasolinera;
 import icai.dtc.isw.message.Message;
 
 public class SocketServer extends Thread {
@@ -93,6 +95,31 @@ public class SocketServer extends Thread {
 					customerControler.setCustomer(cu1);
 					mensajeOut.setContext("/setCustomerResponse");
 					session.put("result","OK");
+					mensajeOut.setSession(session);
+					objectOutputStream.writeObject(mensajeOut);
+					break;
+
+				case "/getGasolineras":
+					GasolineraController gasolineraController=new GasolineraController();
+					ArrayList<Gasolinera> listaGasolineras=new ArrayList<Gasolinera>();
+					gasolineraController.getGasolineras(listaGasolineras);
+					mensajeOut.setContext("/getGasolinerasResponse");
+					session.put("Gasolineras",listaGasolineras);
+					mensajeOut.setSession(session);
+					objectOutputStream.writeObject(mensajeOut);
+					break;
+
+				case "/getGasolinerasFiltradas":
+					float distancia=(float) session.get("distancia");
+					float posx=(float) session.get("posx");
+					float posy=(float) session.get("posy");
+					float maxPrecio=(float) session.get("maxPrecio");
+					boolean servicio=(boolean) session.get("servicio");
+					boolean cargador=(boolean) session.get("cargador");
+					gasolineraController=new GasolineraController();
+					ArrayList<Gasolinera> listaGasolinerasFiltradas=gasolineraController.getGasolinerasFiltradas(distancia, posx, posy, maxPrecio, servicio, cargador);
+					mensajeOut.setContext("/getGasolinerasFiltradasResponse");
+					session.put("GasolinerasFiltradas",listaGasolinerasFiltradas);
 					mensajeOut.setSession(session);
 					objectOutputStream.writeObject(mensajeOut);
 					break;
