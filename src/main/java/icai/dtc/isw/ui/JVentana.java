@@ -2,9 +2,11 @@ package icai.dtc.isw.ui;
 
 import icai.dtc.isw.client.Client;
 import icai.dtc.isw.domain.Customer;
+import icai.dtc.isw.domain.Gasolinera;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -63,7 +65,7 @@ public class JVentana extends JFrame {
         button.setPreferredSize(new Dimension(150, 50));
         button.setFont(new Font("Arial", Font.PLAIN, 18));
         button.setBackground(new Color(0x5F9EA0)); // Color aguamarina
-        button.setForeground(Color.WHITE);
+        button.setForeground(new Color(0x5F9EA0));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createLineBorder(new Color(0x2E8B57), 2, true));
     }
@@ -173,22 +175,6 @@ public class JVentana extends JFrame {
         label.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
-    public String recuperarInformacion() {
-        Client cliente=new Client();
-        HashMap<String,Object> session=new HashMap<>();
-        String context="/getCustomer";
-        session.put("id",id);
-        session=cliente.sentMessage(context,session);
-        Customer cu=(Customer)session.get("Customer");
-        String nombre;
-        if (cu==null) {
-            nombre="Error - No encontrado en la base de datos";
-        }else {
-            nombre=cu.getName();
-        }
-        return nombre;
-    }
-
     public void registerCustomer(String email, String password, String name, String id) {
         Customer cu=new Customer(id,name,email,password);
         Client cliente=new Client();
@@ -211,4 +197,29 @@ public class JVentana extends JFrame {
         System.out.println("Resultado del login: "+result);
         return result;
     }
+
+    public ArrayList<Gasolinera> getGasolineras() {
+        Client cliente=new Client();
+        HashMap<String,Object> session=new HashMap<>();
+        String context="/getGasolineras";
+        session=cliente.sentMessage(context,session);
+        ArrayList<Gasolinera> listaGasolineras=(ArrayList<Gasolinera>)(session.get("Gasolineras"));
+        return listaGasolineras;
+    }
+
+    public ArrayList<Gasolinera> getGasolinerasFiltradas(float distancia, float posx, float posy, float maxPrecio, boolean servicio, boolean cargador) {
+        Client cliente=new Client();
+        HashMap<String,Object> session=new HashMap<>();
+        String context="/getGasolinerasFiltradas";
+        session.put("distancia",distancia);
+        session.put("posx",posx);
+        session.put("posy",posy);
+        session.put("maxPrecio",maxPrecio);
+        session.put("servicio",servicio);
+        session.put("cargador",cargador);
+        session=cliente.sentMessage(context,session);
+        ArrayList<Gasolinera> listaGasolineras=(ArrayList<Gasolinera>)(session.get("Gasolineras"));
+        return listaGasolineras;
+    }
+
 }

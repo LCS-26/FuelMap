@@ -15,9 +15,7 @@ public class CustomerControler {
 	public Boolean checkSecret(String id, String secret) {
 		Customer cu=customerDAO.getCliente(Integer.parseInt(id));
 		if (cu!=null) {
-			if (cu.getSecret().equals(secret)) {
-				return true;
-			}
+            return cu.getSecret().equals(secret);
 		}
 		return false;
 	}

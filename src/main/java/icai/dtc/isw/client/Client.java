@@ -76,6 +76,22 @@ public class Client {
 				System.out.println("Resultado del login: "+resultLogin);
 				break;
 
+			case "/getGasolinerasResponse":
+				session=mensajeVuelta.getSession();
+				ArrayList<Customer> gasolinerasList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Gasolineras"));
+				for (Customer gasolinera : gasolinerasList) {
+					System.out.println("He leído el id: "+gasolinera.getId()+" con nombre: "+gasolinera.getName());
+				}
+				break;
+
+			case "getGasolinerasFiltradasResponse":
+				session=mensajeVuelta.getSession();
+				ArrayList<Customer> gasolinerasListFiltradas=(ArrayList<Customer>)(mensajeVuelta.getSession().get("GasolinerasFiltradas"));
+				for (Customer gasolinera : gasolinerasListFiltradas) {
+					System.out.println("He leído el id: "+gasolinera.getId()+" con nombre: "+gasolinera.getName());
+				}
+				break;
+
 			default:
 
 				System.out.println("\nError a la vuelta");
