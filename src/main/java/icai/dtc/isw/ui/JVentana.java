@@ -10,59 +10,109 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JVentana extends JFrame {
+    private boolean isLoggedIn = false; // Bandera de estado de login
+
     public static void main(String[] args) {
         new JVentana();
     }
 
-    private String id;
-
     public JVentana() {
         super("FUEL MAP");
-        this.setLayout(new BorderLayout());
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(400, 300);
-        this.setResizable(true);
+        setLayout(new BorderLayout());
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setResizable(true);
+
+        // Estilo global para botones y etiquetas
+        UIManager.put("Button.background", new Color(0xFFA500));
+        UIManager.put("Button.foreground", Color.WHITE);
+        UIManager.put("Label.font", new Font("Arial", Font.PLAIN, 14));
 
         // Panel superior con el título
-        JPanel pnlNorte = new JPanel();
-        pnlNorte.setBackground(new Color(0x2E8B57));
-        JLabel lblTitulo = new JLabel("Bienvenido", SwingConstants.CENTER);
-        lblTitulo.setForeground(Color.WHITE);
-        lblTitulo.setFont(new Font("Times new Roman", Font.BOLD, 24));
-        pnlNorte.add(lblTitulo);
-        pnlNorte.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        this.add(pnlNorte, BorderLayout.NORTH);
+        JPanel pnlHeader = new JPanel(new BorderLayout());
+        pnlHeader.setBackground(new Color(0x005EB8));
+        JLabel lblTitle = new JLabel("Fuel Map", SwingConstants.CENTER);
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 32));
+        pnlHeader.add(lblTitle, BorderLayout.CENTER);
 
-        // Panel central con los botones "Registrar" y "Login"
-        JPanel pnlCentro = new JPanel();
-        pnlCentro.setLayout(new GridLayout(1, 2));
-        pnlCentro.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        pnlCentro.setBackground(Color.WHITE);
+        // Panel de navegación lateral
+        JPanel pnlSidebar = new JPanel();
+        pnlSidebar.setLayout(new GridLayout(5, 1, 10, 10));
+        pnlSidebar.setBackground(new Color(0xEEEEEE));
+        pnlSidebar.setPreferredSize(new Dimension(200, getHeight()));
+
         JButton btnRegister = new JButton("Registrar");
         JButton btnLogin = new JButton("Login");
+        JButton btnAllStations = new JButton("Ver todas las gasolineras");
+        JButton btnSearchMap = new JButton("Buscar en el mapa");
+        JButton btnExit = new JButton("Salir");
+
         styleButton(btnRegister);
         styleButton(btnLogin);
+        styleButton(btnAllStations);
+        styleButton(btnSearchMap);
+        styleButton(btnExit);
 
-        pnlCentro.add(btnRegister);
-        pnlCentro.add(btnLogin);
-        this.add(pnlCentro, BorderLayout.CENTER);
+        pnlSidebar.add(btnRegister);
+        pnlSidebar.add(btnLogin);
+        pnlSidebar.add(btnAllStations);
+        pnlSidebar.add(btnSearchMap);
+        pnlSidebar.add(btnExit);
 
-        // Acciones de los botones
+        // Panel principal central (contenedor)
+        JPanel pnlMain = new JPanel(new CardLayout());
+        pnlMain.setBackground(Color.WHITE);
+
+        // Panel de pie de página
+        JPanel pnlFooter = new JPanel();
+        pnlFooter.setBackground(new Color(0x005EB8));
+        JLabel lblFooter = new JLabel("Fuel Map © 2023 - Todos los derechos reservados");
+        lblFooter.setForeground(Color.WHITE);
+        pnlFooter.add(lblFooter);
+
+        // Agregar componentes al contenedor principal
+        add(pnlHeader, BorderLayout.NORTH);
+        add(pnlSidebar, BorderLayout.WEST);
+        add(pnlMain, BorderLayout.CENTER);
+        add(pnlFooter, BorderLayout.SOUTH);
+
+        // Eventos de navegación
         btnRegister.addActionListener(e -> new VentanaRegistro());
         btnLogin.addActionListener(e -> new VentanaLogin());
 
-        // Configuración final de la ventana principal
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
+        // Solo permite acceder a estas opciones si isLoggedIn es verdadero
+        btnAllStations.addActionListener(e -> {
+            if (isLoggedIn) {
+                new VentanaTodasLasGasolineras();
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
+            }
+        });
+
+        btnSearchMap.addActionListener(e -> {
+            if (isLoggedIn) {
+                new VentanaMapa();
+            } else {
+                JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
+            }
+        });
+
+        btnExit.addActionListener(e -> System.exit(0));
+
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void styleButton(JButton button) {
-        button.setPreferredSize(new Dimension(150, 50));
-        button.setFont(new Font("Arial", Font.PLAIN, 18));
-        button.setBackground(new Color(0x5F9EA0));
-        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
         button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createLineBorder(new Color(0x2E8B57), 2, true));
+        button.setBorder(BorderFactory.createLineBorder(new Color(0x005EB8), 2, true));
+    }
+
+    private void styleLabel(JLabel label) {
+        label.setFont(new Font("Arial", Font.PLAIN, 16));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
     }
 
     // Ventana de Registro
@@ -71,7 +121,7 @@ public class JVentana extends JFrame {
             setTitle("Registro de Usuario");
             setSize(400, 300);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setLayout(new GridLayout(5, 2, 10, 10));
+            setLayout(new GridLayout(6, 2, 10, 10));
 
             JLabel lblName = new JLabel("Nombre:");
             JTextField txtName = new JTextField();
@@ -82,18 +132,20 @@ public class JVentana extends JFrame {
             JLabel lblPassword = new JLabel("Contraseña:");
             JPasswordField txtPassword = new JPasswordField();
             JButton btnContinuar = new JButton("Registrar");
+            JButton btnVolver = new JButton("Volver");
 
             styleLabel(lblName);
             styleLabel(lblId);
             styleLabel(lblEmail);
             styleLabel(lblPassword);
             styleButton(btnContinuar);
+            styleButton(btnVolver);
 
             add(lblName); add(txtName);
             add(lblId); add(txtId);
             add(lblEmail); add(txtEmail);
             add(lblPassword); add(txtPassword);
-            add(new JLabel());
+            add(btnVolver);
             add(btnContinuar);
 
             btnContinuar.addActionListener(e -> {
@@ -103,9 +155,11 @@ public class JVentana extends JFrame {
                 String password = new String(txtPassword.getPassword());
                 registerCustomer(email, password, name, id);
                 JOptionPane.showMessageDialog(this, "Registro exitoso");
+                isLoggedIn = true; // Marca al usuario como registrado
                 dispose();
-                new VentanaOpciones();
             });
+
+            btnVolver.addActionListener(e -> dispose());
 
             setLocationRelativeTo(null);
             setVisible(true);
@@ -118,23 +172,25 @@ public class JVentana extends JFrame {
             setTitle("Login de Usuario");
             setSize(400, 200);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setLayout(new GridLayout(3, 2));
+            setLayout(new GridLayout(4, 2));
 
             JLabel lblEmail = new JLabel("Email:");
             JTextField txtEmail = new JTextField();
             JLabel lblPassword = new JLabel("Contraseña:");
             JPasswordField txtPassword = new JPasswordField();
             JButton btnContinuar = new JButton("Login");
+            JButton btnVolver = new JButton("Volver");
 
             styleLabel(lblEmail);
             styleLabel(lblPassword);
             styleButton(btnContinuar);
+            styleButton(btnVolver);
 
             add(lblEmail);
             add(txtEmail);
             add(lblPassword);
             add(txtPassword);
-            add(new JLabel());
+            add(btnVolver);
             add(btnContinuar);
 
             btnContinuar.addActionListener(e -> {
@@ -147,58 +203,60 @@ public class JVentana extends JFrame {
                     String result = loginCustomer(email, password);
                     if ("OK".equals(result)) {
                         JOptionPane.showMessageDialog(this, "Login exitoso");
+                        isLoggedIn = true; // Marca al usuario como logueado
                         dispose();
-                        new VentanaOpciones();
                     } else {
                         JOptionPane.showMessageDialog(this, "Error en el login");
                     }
                 }
             });
 
-            setLocationRelativeTo(null);
-            setVisible(true);
-        }
-    }
-
-    private class VentanaOpciones extends JFrame {
-        public VentanaOpciones() {
-            setTitle("Opciones");
-            setSize(400, 200);
-            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setLayout(new GridLayout(2, 1));
-
-            JButton btnVerGasolineras = new JButton("Ver todas las gasolineras");
-            JButton btnBusquedaFiltrada = new JButton("Hacer una búsqueda filtrada");
-
-            styleButton(btnVerGasolineras);
-            styleButton(btnBusquedaFiltrada);
-
-            add(btnVerGasolineras);
-            add(btnBusquedaFiltrada);
-
-            btnVerGasolineras.addActionListener(e -> new VentanaTodasLasGasolineras());
-            btnBusquedaFiltrada.addActionListener(e -> new VentanaBusquedaFiltrada());
+            btnVolver.addActionListener(e -> dispose());
 
             setLocationRelativeTo(null);
             setVisible(true);
         }
     }
 
+    // Ventana para mostrar todas las gasolineras
     private class VentanaTodasLasGasolineras extends JFrame {
+        private JTextArea txtGasolineras;
+
         public VentanaTodasLasGasolineras() {
             setTitle("Todas las Gasolineras");
-            setSize(500, 400);
+            setSize(600, 400);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new BorderLayout());
 
-            // Obtener todas las gasolineras y mostrarlas en un área de texto
-            JTextArea txtGasolineras = new JTextArea();
+            txtGasolineras = new JTextArea();
             JScrollPane scrollPane = new JScrollPane(txtGasolineras);
             add(scrollPane, BorderLayout.CENTER);
             txtGasolineras.setEditable(false);
 
-            // Cargar datos de gasolineras
-            ArrayList<Gasolinera> gasolineras = getGasolineras();
+            cargarGasolineras(getGasolineras());
+
+            JPanel pnlBotones = new JPanel();
+            JButton btnLimpiarFiltros = new JButton("Limpiar Filtros");
+            JButton btnFiltrar = new JButton("Filtrar");
+            JButton btnVolver = new JButton("Volver");
+            styleButton(btnLimpiarFiltros);
+            styleButton(btnFiltrar);
+            styleButton(btnVolver);
+            pnlBotones.add(btnLimpiarFiltros);
+            pnlBotones.add(btnFiltrar);
+            pnlBotones.add(btnVolver);
+            add(pnlBotones, BorderLayout.SOUTH);
+
+            btnLimpiarFiltros.addActionListener(e -> cargarGasolineras(getGasolineras()));
+            btnFiltrar.addActionListener(e -> new VentanaBusquedaFiltrada(this));
+            btnVolver.addActionListener(e -> dispose());
+
+            setLocationRelativeTo(null);
+            setVisible(true);
+        }
+
+        public void cargarGasolineras(ArrayList<Gasolinera> gasolineras) {
+            txtGasolineras.setText("");
             if (gasolineras != null && !gasolineras.isEmpty()) {
                 StringBuilder gasolinerasText = new StringBuilder();
                 for (Gasolinera gasolinera : gasolineras) {
@@ -208,46 +266,20 @@ public class JVentana extends JFrame {
             } else {
                 txtGasolineras.setText("No se encontraron gasolineras.");
             }
-
-            // Panel inferior con botones "Limpiar Filtros" y "Filtrar"
-            JPanel pnlBotones = new JPanel();
-            JButton btnLimpiarFiltros = new JButton("Limpiar Filtros");
-            JButton btnFiltrar = new JButton("Filtrar");
-            styleButton(btnLimpiarFiltros);
-            styleButton(btnFiltrar);
-            pnlBotones.add(btnLimpiarFiltros);
-            pnlBotones.add(btnFiltrar);
-            add(pnlBotones, BorderLayout.SOUTH);
-
-            // Acción para limpiar filtros (recargar todas las gasolineras)
-            btnLimpiarFiltros.addActionListener(e -> {
-                txtGasolineras.setText(""); // Limpiar área de texto
-                ArrayList<Gasolinera> allGasolineras = getGasolineras();
-                if (allGasolineras != null && !allGasolineras.isEmpty()) {
-                    StringBuilder text = new StringBuilder();
-                    for (Gasolinera gasolinera : allGasolineras) {
-                        text.append(gasolinera.toString()).append("\n");
-                    }
-                    txtGasolineras.setText(text.toString());
-                } else {
-                    txtGasolineras.setText("No se encontraron gasolineras.");
-                }
-            });
-
-            // Acción para abrir la ventana de búsqueda filtrada
-            btnFiltrar.addActionListener(e -> new VentanaBusquedaFiltrada());
-
-            setLocationRelativeTo(null);
-            setVisible(true);
         }
     }
 
+    // Ventana de búsqueda filtrada para filtrar gasolineras
     private class VentanaBusquedaFiltrada extends JFrame {
-        public VentanaBusquedaFiltrada() {
+        private VentanaTodasLasGasolineras ventanaGasolineras;
+
+        public VentanaBusquedaFiltrada(VentanaTodasLasGasolineras ventanaGasolineras) {
+            this.ventanaGasolineras = ventanaGasolineras;
+
             setTitle("Búsqueda Filtrada");
             setSize(400, 300);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            setLayout(new GridLayout(7, 2));
+            setLayout(new GridLayout(8, 2));
 
             JLabel lblDistancia = new JLabel("Distancia:");
             JTextField txtDistancia = new JTextField();
@@ -260,12 +292,14 @@ public class JVentana extends JFrame {
             JCheckBox chkServicio = new JCheckBox("Con servicio");
             JCheckBox chkCargador = new JCheckBox("Con cargador");
             JButton btnBuscar = new JButton("Buscar");
+            JButton btnVolver = new JButton("Volver");
 
             styleLabel(lblDistancia);
             styleLabel(lblPosX);
             styleLabel(lblPosY);
             styleLabel(lblMaxPrecio);
             styleButton(btnBuscar);
+            styleButton(btnVolver);
 
             add(lblDistancia); add(txtDistancia);
             add(lblPosX); add(txtPosX);
@@ -273,7 +307,8 @@ public class JVentana extends JFrame {
             add(lblMaxPrecio); add(txtMaxPrecio);
             add(new JLabel("")); add(chkServicio);
             add(new JLabel("")); add(chkCargador);
-            add(new JLabel("")); add(btnBuscar);
+            add(btnVolver);
+            add(btnBuscar);
 
             btnBuscar.addActionListener(e -> {
                 float distancia = Float.parseFloat(txtDistancia.getText());
@@ -284,27 +319,40 @@ public class JVentana extends JFrame {
                 boolean cargador = chkCargador.isSelected();
 
                 ArrayList<Gasolinera> gasolinerasFiltradas = getGasolinerasFiltradas(distancia, posX, posY, maxPrecio, servicio, cargador);
-                mostrarGasolineras(gasolinerasFiltradas);
+                ventanaGasolineras.cargarGasolineras(gasolinerasFiltradas);
+                dispose();
             });
+
+            btnVolver.addActionListener(e -> dispose());
 
             setLocationRelativeTo(null);
             setVisible(true);
         }
+    }
 
-        private void mostrarGasolineras(ArrayList<Gasolinera> gasolineras) {
-            StringBuilder message = new StringBuilder("Gasolineras Filtradas:\n");
-            for (Gasolinera gasolinera : gasolineras) {
-                message.append(gasolinera.toString()).append("\n");
-            }
-            JOptionPane.showMessageDialog(this, message.toString());
+    // Ventana para mostrar el mapa
+    private class VentanaMapa extends JFrame {
+        public VentanaMapa() {
+            setTitle("Mapa de Gasolineras");
+            setSize(600, 400);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            setLayout(new BorderLayout());
+
+            JLabel lblMapa = new JLabel(new ImageIcon(getClass().getResource("/images/mapa.png")));
+            add(lblMapa, BorderLayout.CENTER);
+
+            JButton btnVolver = new JButton("Volver");
+            styleButton(btnVolver);
+            add(btnVolver, BorderLayout.SOUTH);
+
+            btnVolver.addActionListener(e -> dispose());
+
+            setLocationRelativeTo(null);
+            setVisible(true);
         }
     }
 
-    private void styleLabel(JLabel label) {
-        label.setFont(new Font("Arial", Font.PLAIN, 16));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-    }
-
+    // Métodos de cliente y manejo de gasolineras (sin cambios)
     public void registerCustomer(String email, String password, String name, String id) {
         Customer cu = new Customer(id, name, email, password);
         Client cliente = new Client();
