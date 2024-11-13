@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 import icai.dtc.isw.configuration.PropertiesISW;
 import icai.dtc.isw.domain.Customer;
+import icai.dtc.isw.domain.Gasolinera;
 import icai.dtc.isw.message.Message;
 
 public class Client {
@@ -78,9 +79,9 @@ public class Client {
 
 			case "/getGasolinerasResponse":
 				session=mensajeVuelta.getSession();
-				ArrayList<Customer> gasolinerasList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Gasolineras"));
-				for (Customer gasolinera : gasolinerasList) {
-					System.out.println("He leído el id: "+gasolinera.getId()+" con nombre: "+gasolinera.getName());
+				ArrayList<Gasolinera> gasolinerasList=(ArrayList<Gasolinera>)(mensajeVuelta.getSession().get("Gasolineras"));
+				for (Gasolinera gasolinera : gasolinerasList) {
+					System.out.println("He recibido la gasolinera: "+gasolinera.getNombre());
 				}
 				break;
 
