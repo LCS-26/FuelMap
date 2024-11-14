@@ -323,10 +323,35 @@ public class JVentana extends JFrame {
             add(btnBuscar);
 
             btnBuscar.addActionListener(e -> {
-                float distancia = Float.parseFloat(txtDistancia.getText());
-                float posX = Float.parseFloat(txtPosX.getText());
-                float posY = Float.parseFloat(txtPosY.getText());
-                float maxPrecio = Float.parseFloat(txtMaxPrecio.getText());
+                float distancia;
+                float posX;
+                float posY;
+                float maxPrecio;
+
+                if (txtDistancia == null){
+                    distancia = 0;
+                } else {
+                    distancia = Float.parseFloat(txtDistancia.getText());
+                }
+
+                if (txtPosX == null){
+                    posX = 0;
+                } else {
+                    posX = Float.parseFloat(txtPosX.getText());
+                }
+
+                if (txtPosY == null){
+                    posY = 0;
+                } else {
+                    posY = Float.parseFloat(txtPosY.getText());
+                }
+
+                if (txtMaxPrecio == null){
+                    maxPrecio = 0;
+                } else {
+                    maxPrecio = Float.parseFloat(txtMaxPrecio.getText());
+                }
+
                 boolean servicio = chkServicio.isSelected();
                 boolean cargador = chkCargador.isSelected();
 
