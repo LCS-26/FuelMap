@@ -28,14 +28,17 @@ public class GasolineraDAO {
 
     public void getGasolinerasFiltradas(ArrayList<Gasolinera> lista, float distancia, float posx, float posy, float maxPrecio, boolean servicio, boolean cargador) {
         Connection con=ConnectionDAO.getInstance().getConnection();
-        String consulta = "SELECT * FROM gasolineras WHERE SQRT(POWER(posx - ?,2) + POWER(posy - ?,2)) <= ? AND precio <= ?";
+        String consulta = "SELECT * FROM gasolineras WHERE SQRT(POWER(posx::real - ?::real, 2) + POWER(posy::real - ?::real, 2)) <= ?::real AND precio::real <= ?::real";
+        //String consulta = "SELECT * FROM gasolineras";
 
         if (servicio) {
             consulta += " AND servicio = TRUE";
+            System.out.println("Servicio");
         }
 
         if (cargador) {
             consulta += " AND cargador = TRUE";
+            System.out.println("Cargador");
         }
 
         try (PreparedStatement pst = con.prepareStatement(consulta)) {
@@ -44,11 +47,13 @@ public class GasolineraDAO {
             pst.setString(3, String.valueOf(distancia));
             pst.setString(4, String.valueOf(maxPrecio));
 
-            try (ResultSet rs = pst.executeQuery()) {
-                while (rs.next()) {
-                    lista.add(new Gasolinera(rs.getString(1), rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getBoolean(8)));
-                }
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                lista.add(new Gasolinera(rs.getString(1),rs.getFloat(2), rs.getFloat(3), rs.getFloat(4), rs.getString(5), rs.getString(6), rs.getBoolean(7), rs.getBoolean(8)));
+                System.out.println("Gasolinera añadida");
             }
+            System.out.println(lista.size());
 
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
