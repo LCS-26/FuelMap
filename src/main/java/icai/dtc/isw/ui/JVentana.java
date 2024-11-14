@@ -1,5 +1,4 @@
 package icai.dtc.isw.ui;
-
 import icai.dtc.isw.client.Client;
 import icai.dtc.isw.domain.Customer;
 import icai.dtc.isw.domain.Gasolinera;
@@ -68,7 +67,7 @@ public class JVentana extends JFrame {
         // Panel de pie de página
         JPanel pnlFooter = new JPanel();
         pnlFooter.setBackground(new Color(0x005EB8));
-        JLabel lblFooter = new JLabel("Fuel Map © 2023 - Todos los derechos reservados");
+        JLabel lblFooter = new JLabel("Fuel Map © 2024 - Todos los derechos reservados");
         lblFooter.setForeground(Color.WHITE);
         pnlFooter.add(lblFooter);
 
@@ -99,6 +98,16 @@ public class JVentana extends JFrame {
                 JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
             }
         });
+
+        // Intentar cargar la imagen
+        ImageIcon imagenmapa = new ImageIcon("src/main/resources/imagenpp.png");
+        Image imageEscala = imagenmapa.getImage().getScaledInstance(800, 800, Image.SCALE_SMOOTH);
+        ImageIcon iconScale = new ImageIcon(imageEscala);
+        JLabel etiquetImage = new JLabel(iconScale);
+        etiquetImage.setPreferredSize(new Dimension(800, 800));
+
+        // Añadir la imagen al centro del BorderLayout
+        add(etiquetImage, BorderLayout.CENTER);
 
         btnExit.addActionListener(e -> System.exit(0));
 
@@ -346,23 +355,21 @@ public class JVentana extends JFrame {
             setLayout(new BorderLayout());
 
             // Intentar cargar la imagen
-            URL imageUrl = getClass().getResource("/icai/dtc/isw/images/mapa.png");
-            if (imageUrl != null) {
-                JLabel lblMapa = new JLabel(new ImageIcon(imageUrl));
-                add(lblMapa, BorderLayout.CENTER);
-            } else {
-                // Mostrar mensaje de error si la imagen no se encuentra
-                JLabel lblError = new JLabel("Error: La imagen del mapa no se encuentra.", SwingConstants.CENTER);
-                lblError.setFont(new Font("Arial", Font.BOLD, 16));
-                lblError.setForeground(Color.RED);
-                add(lblError, BorderLayout.CENTER);
-                System.err.println("Error: No se encontró la imagen en la ruta especificada.");
-            }
+            ImageIcon imagenmapa = new ImageIcon("src/main/resources/mapa.png");
+            Image imageEscala = imagenmapa.getImage().getScaledInstance(800, 800, Image.SCALE_SMOOTH);
+            ImageIcon iconScale = new ImageIcon(imageEscala);
+            JLabel etiquetImage = new JLabel(iconScale);
+            etiquetImage.setPreferredSize(new Dimension(800, 800));
 
+            // Añadir la imagen al centro del BorderLayout
+            add(etiquetImage, BorderLayout.CENTER);
+
+            // Crear y añadir el botón Volver
             JButton btnVolver = new JButton("Volver");
             styleButton(btnVolver);
             add(btnVolver, BorderLayout.SOUTH);
 
+            // Acción del botón Volver para cerrar la ventana
             btnVolver.addActionListener(e -> dispose());
 
             setLocationRelativeTo(null);
