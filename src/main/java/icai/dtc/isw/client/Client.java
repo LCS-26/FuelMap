@@ -84,12 +84,12 @@ public class Client {
 					System.out.println("He recibido la gasolinera: "+gasolinera.getNombre());
 				}
 				break;
-
-			case "getGasolinerasFiltradasResponse":
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																
+			case "/getGasolinerasFiltradasResponse":
 				session=mensajeVuelta.getSession();
-				ArrayList<Customer> gasolinerasListFiltradas=(ArrayList<Customer>)(mensajeVuelta.getSession().get("GasolinerasFiltradas"));
-				for (Customer gasolinera : gasolinerasListFiltradas) {
-					System.out.println("He leído el id: "+gasolinera.getId()+" con nombre: "+gasolinera.getName());
+				ArrayList<Gasolinera> gasolinerasListFiltradas=(ArrayList<Gasolinera>)(mensajeVuelta.getSession().get("GasolinerasFiltradas"));
+				for (Gasolinera gasolinera : gasolinerasListFiltradas) {
+					System.out.println("He recibido la gasolinera: "+gasolinera.getNombre());
 				}
 				break;
 

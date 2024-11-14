@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class JVentana extends JFrame {
     private boolean isLoggedIn = false; // Bandera de estado de login
-
+    public ArrayList<Gasolinera> listaGasolineras = new ArrayList<>();
     public static void main(String[] args) {
         new JVentana();
     }
@@ -84,7 +84,8 @@ public class JVentana extends JFrame {
         // Solo permite acceder a estas opciones si isLoggedIn es verdadero
         btnAllStations.addActionListener(e -> {
             if (isLoggedIn) {
-                new VentanaTodasLasGasolineras();
+                listaGasolineras = getGasolineras();
+                new VentanaTodasLasGasolineras(listaGasolineras);
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
             }
@@ -232,7 +233,7 @@ public class JVentana extends JFrame {
     private class VentanaTodasLasGasolineras extends JFrame {
         private JTextArea txtGasolineras;
 
-        public VentanaTodasLasGasolineras() {
+        public VentanaTodasLasGasolineras(ArrayList<Gasolinera> listaGasolineras) {
             setTitle("Todas las Gasolineras");
             setSize(600, 400);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -257,7 +258,7 @@ public class JVentana extends JFrame {
             pnlBotones.add(btnVolver);
             add(pnlBotones, BorderLayout.SOUTH);
 
-            btnLimpiarFiltros.addActionListener(e -> cargarGasolineras(getGasolineras()));
+            btnLimpiarFiltros.addActionListener(e -> cargarGasolineras(listaGasolineras));
             btnFiltrar.addActionListener(e -> new VentanaBusquedaFiltrada(this));
             btnVolver.addActionListener(e -> dispose());
 
@@ -267,6 +268,7 @@ public class JVentana extends JFrame {
 
         public void cargarGasolineras(ArrayList<Gasolinera> gasolineras) {
             txtGasolineras.setText("");
+            System.out.println(gasolineras.size());
             if (gasolineras != null && !gasolineras.isEmpty()) {
                 StringBuilder gasolinerasText = new StringBuilder();
                 for (Gasolinera gasolinera : gasolineras) {
@@ -284,7 +286,7 @@ public class JVentana extends JFrame {
         private VentanaTodasLasGasolineras ventanaGasolineras;
 
         public VentanaBusquedaFiltrada(VentanaTodasLasGasolineras ventanaGasolineras) {
-            this.ventanaGasolineras = ventanaGasolineras;
+            //this.ventanaGasolineras = ventanaGasolineras;
 
             setTitle("Búsqueda Filtrada");
             setSize(400, 300);
@@ -328,8 +330,12 @@ public class JVentana extends JFrame {
                 boolean servicio = chkServicio.isSelected();
                 boolean cargador = chkCargador.isSelected();
 
-                ArrayList<Gasolinera> gasolinerasFiltradas = getGasolinerasFiltradas(distancia, posX, posY, maxPrecio, servicio, cargador);
-                ventanaGasolineras.cargarGasolineras(gasolinerasFiltradas);
+                listaGasolineras = getGasolinerasFiltradas(distancia, posX, posY, maxPrecio, servicio, cargador);
+                //listaGasolineras = getGasolineras();
+
+                ventanaGasolineras.cargarGasolineras(listaGasolineras);
+                //new VentanaTodasLasGasolineras(listaGasolineras);
+
                 dispose();
             });
 
@@ -413,6 +419,6 @@ public class JVentana extends JFrame {
         session.put("servicio", servicio);
         session.put("cargador", cargador);
         session = cliente.sentMessage(context, session);
-        return (ArrayList<Gasolinera>) session.get("Gasolineras");
+        return (ArrayList<Gasolinera>) session.get("GasolinerasFiltradas");
     }
 }
