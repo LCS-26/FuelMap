@@ -6,6 +6,7 @@ import icai.dtc.isw.domain.Gasolinera;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -338,8 +339,19 @@ public class JVentana extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new BorderLayout());
 
-            JLabel lblMapa = new JLabel(new ImageIcon(getClass().getResource("/images/mapa.png")));
-            add(lblMapa, BorderLayout.CENTER);
+            // Intentar cargar la imagen
+            URL imageUrl = getClass().getResource("/icai/dtc/isw/images/mapa.png");
+            if (imageUrl != null) {
+                JLabel lblMapa = new JLabel(new ImageIcon(imageUrl));
+                add(lblMapa, BorderLayout.CENTER);
+            } else {
+                // Mostrar mensaje de error si la imagen no se encuentra
+                JLabel lblError = new JLabel("Error: La imagen del mapa no se encuentra.", SwingConstants.CENTER);
+                lblError.setFont(new Font("Arial", Font.BOLD, 16));
+                lblError.setForeground(Color.RED);
+                add(lblError, BorderLayout.CENTER);
+                System.err.println("Error: No se encontró la imagen en la ruta especificada.");
+            }
 
             JButton btnVolver = new JButton("Volver");
             styleButton(btnVolver);
@@ -351,7 +363,6 @@ public class JVentana extends JFrame {
             setVisible(true);
         }
     }
-
     // Métodos de cliente y manejo de gasolineras (sin cambios)
     public void registerCustomer(String email, String password, String name, String id) {
         Customer cu = new Customer(id, name, email, password);
