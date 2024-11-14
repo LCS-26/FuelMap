@@ -27,7 +27,7 @@ public class JVentana extends JFrame {
         JPanel pnlNorte = new JPanel();
         pnlNorte.setBackground(new Color(0x2E8B57));
         JLabel lblTitulo = new JLabel("Bienvenido", SwingConstants.CENTER);
-        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setForeground(Color.BLUE);
         lblTitulo.setFont(new Font("Times new Roman", Font.BOLD, 24));
         pnlNorte.add(lblTitulo);
         pnlNorte.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -37,7 +37,7 @@ public class JVentana extends JFrame {
         JPanel pnlCentro = new JPanel();
         pnlCentro.setLayout(new GridLayout(1, 2));
         pnlCentro.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        pnlCentro.setBackground(Color.WHITE);
+        pnlCentro.setBackground(Color.BLUE);
         JButton btnRegister = new JButton("Registrar");
         JButton btnLogin = new JButton("Login");
         styleButton(btnRegister);
@@ -276,10 +276,28 @@ public class JVentana extends JFrame {
             add(new JLabel("")); add(btnBuscar);
 
             btnBuscar.addActionListener(e -> {
-                float distancia = Float.parseFloat(txtDistancia.getText());
-                float posX = Float.parseFloat(txtPosX.getText());
-                float posY = Float.parseFloat(txtPosY.getText());
-                float maxPrecio = Float.parseFloat(txtMaxPrecio.getText());
+                float distancia, posX, posY, maxPrecio;
+                if (txtDistancia.getText().isEmpty()){
+                    distancia = Float.MAX_VALUE;
+                } else {
+                    distancia = Float.parseFloat(txtDistancia.getText());
+                }
+                if (txtPosX.getText().isEmpty()){
+                    posX = 0;
+                } else {
+                    posX = Float.parseFloat(txtPosX.getText());
+                }
+                if (txtPosY.getText().isEmpty()){
+                    posY = 0;
+                } else {
+                    posY = Float.parseFloat(txtPosY.getText());
+                }
+                if (txtMaxPrecio.getText().isEmpty()){
+                    maxPrecio = Float.MAX_VALUE;
+                } else {
+                    maxPrecio = Float.parseFloat(txtMaxPrecio.getText());
+                }
+
                 boolean servicio = chkServicio.isSelected();
                 boolean cargador = chkCargador.isSelected();
 
