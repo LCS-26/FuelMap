@@ -39,4 +39,28 @@ public class Gasolinera implements Serializable{
     public float getPrecio() {
         return precio;
     }
+
+    public float getPosx() {
+        return posx;
+    }
+
+    public float getPosy() {
+        return posy;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public boolean getServicio() {
+        return servicio;
+    }
+
+    public boolean getCargador() {
+        return cargador;
+    }
 }
