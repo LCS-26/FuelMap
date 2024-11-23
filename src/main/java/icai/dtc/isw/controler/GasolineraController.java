@@ -21,15 +21,4 @@ public class GasolineraController {
         gasolineraDAO.getGasolinerasFiltradas(lista, distancia, posx, posy, maxPrecio, servicio, cargador);
         return lista;
     }
-
 }
-
-
-
-
-
-
-
-
-
-

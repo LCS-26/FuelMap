@@ -63,4 +63,14 @@ public class Gasolinera implements Serializable{
     public boolean getCargador() {
         return cargador;
     }
+
+    @Override
+    public String toString() {
+        return
+                "Gasolinera: " + nombre + '\n' +
+                "Dirección: " + email + '\n' +
+                "Precio: " + precio + " €/L" + '\n' +
+                "Teléfono: " + telefono + '\n' +
+                "Distancia: ";
+}
 }

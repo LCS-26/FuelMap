@@ -272,7 +272,10 @@ public class JVentana extends JFrame {
             if (gasolineras != null && !gasolineras.isEmpty()) {
                 StringBuilder gasolinerasText = new StringBuilder();
                 for (Gasolinera gasolinera : gasolineras) {
-                    gasolinerasText.append(gasolinera.toString()).append("\n");
+                    gasolinerasText.append(gasolinera.toString() +
+                            gasolinera.getDistancia(0, 0) + " km \n" +
+                            " -----------------------------");
+
                 }
                 txtGasolineras.setText(gasolinerasText.toString());
             } else {
