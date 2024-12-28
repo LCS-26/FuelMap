@@ -7,10 +7,16 @@ import icai.dtc.isw.domain.Customer;
 
 public class CustomerControler {
 	CustomerDAO customerDAO=new CustomerDAO();
+
 	public void getCustomers(ArrayList<Customer> lista) {
 		customerDAO.getClientes(lista);
 	}
-	public Customer getCustomer(int id) {return(customerDAO.getCliente(id));}
+	public Customer getCustomer(int id) {
+		return(customerDAO.getCliente(id));}
+
+	public void setCustomer(Customer cu) {
+		customerDAO.setCliente(cu);
+	}
 
 	public Boolean checkSecret(String id, String secret) {
 		Customer cu=customerDAO.getCliente(Integer.parseInt(id));
@@ -33,8 +39,6 @@ public class CustomerControler {
 		return null;
 	}
 
-	public void setCustomer(Customer cu) {
-		customerDAO.setCliente(cu);
-	}
+
 
 }
