@@ -8,9 +8,12 @@ import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 public class JVentana extends JFrame {
     private boolean isLoggedIn = false; // Bandera de estado de login
+    private float posx = 0;
+    private float posy = 0;
     public ArrayList<Gasolinera> listaGasolineras = new ArrayList<>();
     public static void main(String[] args) {
         new JVentana();
@@ -38,26 +41,23 @@ public class JVentana extends JFrame {
 
         // Panel de navegación lateral
         JPanel pnlSidebar = new JPanel();
-        pnlSidebar.setLayout(new GridLayout(5, 1, 10, 10));
+        pnlSidebar.setLayout(new GridLayout(4, 1, 10, 10));
         pnlSidebar.setBackground(new Color(0xEEEEEE));
         pnlSidebar.setPreferredSize(new Dimension(200, getHeight()));
 
         JButton btnRegister = new JButton("Registrar");
         JButton btnLogin = new JButton("Login");
-        JButton btnAllStations = new JButton("Ver todas las gasolineras");
-        JButton btnSearchMap = new JButton("Buscar en el mapa");
+        JButton btnAllStations = new JButton("Buscar gasolineras");
         JButton btnExit = new JButton("Salir");
 
         styleButton(btnRegister);
         styleButton(btnLogin);
         styleButton(btnAllStations);
-        styleButton(btnSearchMap);
         styleButton(btnExit);
 
         pnlSidebar.add(btnRegister);
         pnlSidebar.add(btnLogin);
         pnlSidebar.add(btnAllStations);
-        pnlSidebar.add(btnSearchMap);
         pnlSidebar.add(btnExit);
 
         // Panel principal central (contenedor)
@@ -86,14 +86,6 @@ public class JVentana extends JFrame {
             if (isLoggedIn) {
                 listaGasolineras = getGasolineras();
                 new VentanaTodasLasGasolineras(listaGasolineras);
-            } else {
-                JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
-            }
-        });
-
-        btnSearchMap.addActionListener(e -> {
-            if (isLoggedIn) {
-                new VentanaMapa();
             } else {
                 JOptionPane.showMessageDialog(this, "Por favor, inicie sesión o regístrese para acceder a esta opción.");
             }
@@ -232,6 +224,7 @@ public class JVentana extends JFrame {
     // Ventana para mostrar todas las gasolineras
     private class VentanaTodasLasGasolineras extends JFrame {
         private JTextArea txtGasolineras;
+        private ArrayList<Gasolinera> listaFiltrada;
 
         public VentanaTodasLasGasolineras(ArrayList<Gasolinera> listaGasolineras) {
             setTitle("Todas las Gasolineras");
@@ -249,17 +242,21 @@ public class JVentana extends JFrame {
             JPanel pnlBotones = new JPanel();
             JButton btnLimpiarFiltros = new JButton("Limpiar Filtros");
             JButton btnFiltrar = new JButton("Filtrar");
+            JButton btnMapa = new JButton("Ver Mapa");
             JButton btnVolver = new JButton("Volver");
             styleButton(btnLimpiarFiltros);
             styleButton(btnFiltrar);
+            styleButton(btnMapa);
             styleButton(btnVolver);
             pnlBotones.add(btnLimpiarFiltros);
             pnlBotones.add(btnFiltrar);
+            pnlBotones.add(btnMapa);
             pnlBotones.add(btnVolver);
             add(pnlBotones, BorderLayout.SOUTH);
 
             btnLimpiarFiltros.addActionListener(e -> cargarGasolineras(listaGasolineras));
             btnFiltrar.addActionListener(e -> new VentanaBusquedaFiltrada(this));
+            btnMapa.addActionListener(e -> new VentanaMapa(listaFiltrada, posx, posy));
             btnVolver.addActionListener(e -> dispose());
 
             setLocationRelativeTo(null);
@@ -268,6 +265,7 @@ public class JVentana extends JFrame {
 
         public void cargarGasolineras(ArrayList<Gasolinera> gasolineras) {
             txtGasolineras.setText("");
+            this.listaFiltrada = gasolineras;
             System.out.println(gasolineras.size());
             if (gasolineras != null && !gasolineras.isEmpty()) {
                 StringBuilder gasolinerasText = new StringBuilder();
@@ -296,7 +294,7 @@ public class JVentana extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new GridLayout(8, 2));
 
-            JLabel lblDistancia = new JLabel("Distancia:");
+            JLabel lblDistancia = new JLabel("Distancia (Km):");
             JTextField txtDistancia = new JTextField();
             JLabel lblPosX = new JLabel("Posición X:");
             JTextField txtPosX = new JTextField();
@@ -308,6 +306,7 @@ public class JVentana extends JFrame {
             JCheckBox chkCargador = new JCheckBox("Con cargador");
             JButton btnBuscar = new JButton("Buscar");
             JButton btnVolver = new JButton("Volver");
+            JButton btnLocalizar = new JButton("Localizar");
 
             styleLabel(lblDistancia);
             styleLabel(lblPosX);
@@ -315,42 +314,48 @@ public class JVentana extends JFrame {
             styleLabel(lblMaxPrecio);
             styleButton(btnBuscar);
             styleButton(btnVolver);
+            styleButton(btnLocalizar);
 
             add(lblDistancia); add(txtDistancia);
             add(lblPosX); add(txtPosX);
             add(lblPosY); add(txtPosY);
             add(lblMaxPrecio); add(txtMaxPrecio);
             add(new JLabel("")); add(chkServicio);
-            add(new JLabel("")); add(chkCargador);
+            add(btnLocalizar); add(chkCargador);
             add(btnVolver);
             add(btnBuscar);
 
+            btnLocalizar.addActionListener(e -> {
+                float rndx = new Random().nextFloat(-50000, 50000);
+                float rndy = new Random().nextFloat(-50000, 50000);
+                txtPosX.setText(String.valueOf(rndx));
+                txtPosY.setText(String.valueOf(rndy));
+            });
+
             btnBuscar.addActionListener(e -> {
                 float distancia;
-                float posX;
-                float posY;
                 float maxPrecio;
 
-                if (txtDistancia == null){
-                    distancia = 0;
+                if (txtDistancia.getText().isEmpty()){
+                    distancia = Float.MAX_VALUE;
                 } else {
-                    distancia = Float.parseFloat(txtDistancia.getText());
+                    distancia = 1000*Float.parseFloat(txtDistancia.getText());
                 }
 
-                if (txtPosX == null){
-                    posX = 0;
+                if (txtPosX.getText().isEmpty()){
+                    posx = 0;
                 } else {
-                    posX = Float.parseFloat(txtPosX.getText());
+                    posx = Float.parseFloat(txtPosX.getText());
                 }
 
-                if (txtPosY == null){
-                    posY = 0;
+                if (txtPosY.getText().isEmpty()){
+                    posy = 0;
                 } else {
-                    posY = Float.parseFloat(txtPosY.getText());
+                    posy = Float.parseFloat(txtPosY.getText());
                 }
 
-                if (txtMaxPrecio == null){
-                    maxPrecio = 0;
+                if (txtMaxPrecio.getText().isEmpty()){
+                    maxPrecio = Float.MAX_VALUE;
                 } else {
                     maxPrecio = Float.parseFloat(txtMaxPrecio.getText());
                 }
@@ -358,8 +363,9 @@ public class JVentana extends JFrame {
                 boolean servicio = chkServicio.isSelected();
                 boolean cargador = chkCargador.isSelected();
 
-                listaGasolineras = getGasolinerasFiltradas(distancia, posX, posY, maxPrecio, servicio, cargador);
+                listaGasolineras = getGasolinerasFiltradas(distancia, posx, posy, maxPrecio, servicio, cargador);
                 //listaGasolineras = getGasolineras();
+                System.out.println(distancia + " " + posx + " " + posy + " " + maxPrecio + " " + servicio + " " + cargador);
 
                 ventanaGasolineras.cargarGasolineras(listaGasolineras);
                 //new VentanaTodasLasGasolineras(listaGasolineras);
@@ -374,23 +380,54 @@ public class JVentana extends JFrame {
         }
     }
 
+    // Clase para dibujar un círculo en un JPanel
+    private class CircleDrawing extends JPanel {
+        int posx;
+        int posy;
+        ArrayList<Gasolinera> listaGasolineras;
+
+        // Intentar cargar la imagen
+        ImageIcon imagenmapa = new ImageIcon("src/main/resources/mapa.png");
+        Image imageEscala = imagenmapa.getImage().getScaledInstance(800, 600, Image.SCALE_SMOOTH);
+        ImageIcon iconScale = new ImageIcon(imageEscala);
+        JLabel etiquetImage = new JLabel(iconScale);
+        //etiquetImage.setPreferredSize(new Dimension(800, 600));
+
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.drawImage(iconScale.getImage(), 0, 0, this);
+
+            for (Gasolinera gasolinera : listaGasolineras) {
+                g.setColor(Color.RED);
+                g.fillOval((int)gasolinera.getPosx()/300 + 400, (int)gasolinera.getPosy()/300 + 300, 8,8);
+            }
+
+            g.setColor(Color.BLUE);
+            g.fillOval(posx/300 + 400, posy/300 + 300, 16,16); // Dibuja un óvalo
+        }
+
+        public void pintar(ArrayList<Gasolinera> listaGasolineras, int posx, int posy){
+            this.listaGasolineras = listaGasolineras;
+            this.posx = posx;
+            this.posy = posy;
+            this.repaint();
+        }
+    }
+
     // Ventana para mostrar el mapa
     private class VentanaMapa extends JFrame {
-        public VentanaMapa() {
+        public VentanaMapa(ArrayList<Gasolinera> listaGasolineras, float posx, float posy) {
             setTitle("Mapa de Gasolineras");
-            setSize(600, 400);
+            setSize(800, 600);
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLayout(new BorderLayout());
 
-            // Intentar cargar la imagen
-            ImageIcon imagenmapa = new ImageIcon("src/main/resources/mapa.png");
-            Image imageEscala = imagenmapa.getImage().getScaledInstance(800, 800, Image.SCALE_SMOOTH);
-            ImageIcon iconScale = new ImageIcon(imageEscala);
-            JLabel etiquetImage = new JLabel(iconScale);
-            etiquetImage.setPreferredSize(new Dimension(800, 800));
-
-            // Añadir la imagen al centro del BorderLayout
-            add(etiquetImage, BorderLayout.CENTER);
+            CircleDrawing circleDrawing = new CircleDrawing();
+            add(circleDrawing, BorderLayout.CENTER);
+            circleDrawing.pintar(listaGasolineras, (int)posx, (int)posy);
 
             // Crear y añadir el botón Volver
             JButton btnVolver = new JButton("Volver");

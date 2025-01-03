@@ -41,7 +41,7 @@ public class GasolineraDAO {
             System.out.println("Cargador");
         }
 
-        consulta += " ORDER BY distancia ASC";
+        //consulta += " ORDER BY distancia ASC";
 
         try (PreparedStatement pst = con.prepareStatement(consulta)) {
             pst.setString(1, String.valueOf(posx));
